@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Absensi Siswa</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6f4;--card:#fff;--ink:#14233b;--mut:#64748b;--line:#e2e8e4;--pri:#134e4a;--pri2:#0f766e;--ok:#0f8b6d;--okbg:#dff5ec;--no:#c93c3c;--nobg:#fde6e6;--wait:#b7791f;--waitbg:#fdf3dc;--r:14px}
+*{box-sizing:border-box;margin:0}
+body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5;min-height:100vh}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0}
+:focus-visible{outline:3px solid #5eead4;outline-offset:2px}
+.hide{display:none!important}
+/* login */
+#login{min-height:100vh;display:grid;grid-template-columns:1.1fr 1fr}
+.hero{background:var(--pri);color:#e6fffa;padding:56px;display:flex;flex-direction:column;justify-content:space-between}
+.hero h1{font-size:44px;line-height:1.1;font-weight:800;max-width:11ch}
+.hero p{max-width:38ch;color:#a7d8d0;margin-top:16px}
+.hero ul{list-style:none;padding:0;display:grid;gap:10px;color:#c9efe8;font-size:14px}
+.hero li:before{content:"✓ ";color:#5eead4;font-weight:700}
+.logo{font-weight:800;font-size:18px;display:flex;gap:10px;align-items:center}
+.logo i{width:34px;height:34px;border-radius:10px;background:#5eead4;color:var(--pri);display:grid;place-items:center;font-style:normal}
+.lf{display:grid;place-items:center;padding:32px}
+.lf form{width:100%;max-width:380px}
+.lf h2{font-size:26px;margin-bottom:6px}
+.lf .sub{color:var(--mut);margin-bottom:24px;font-size:14px}
+label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+input,select,textarea{width:100%;padding:11px 13px;border:1.5px solid var(--line);border-radius:10px;background:#fff}
+input:focus,select:focus,textarea:focus{border-color:var(--pri2);outline:0;box-shadow:0 0 0 3px #ccfbf1}
+textarea{resize:vertical;min-height:90px}
+.btn{padding:11px 18px;border-radius:10px;font-weight:700;background:var(--pri);color:#fff;transition:background .15s}
+.btn:hover{background:var(--pri2)}
+.btn.full{width:100%;margin-top:22px;padding:13px}
+.btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}
+.btn.ghost:hover{background:#f1f5f3}
+.btn.red{background:var(--no)}
+.btn.sm{padding:6px 12px;font-size:13px}
+.btn:disabled{opacity:.6;cursor:wait}
+.err{color:var(--no);font-size:13px;margin-top:12px;min-height:18px}
+/* shell */
+.shell{display:grid;grid-template-columns:240px 1fr;min-height:100vh}
+aside{background:var(--pri);color:#e6fffa;padding:22px 16px;display:flex;flex-direction:column;gap:6px;position:sticky;top:0;height:100vh}
+aside .logo{margin:0 8px 22px}
+.nav{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;color:#b9e3dc;text-align:left;padding:11px 14px;border-radius:10px;font-weight:600}
+.nav:hover{background:#1b605b}
+.nav.on{background:#e6fffa;color:var(--pri)}
+.badge{background:var(--no);color:#fff;border-radius:99px;font-size:11px;padding:1px 8px}
+.me{margin-top:auto;padding:12px 8px 0;border-top:1px solid #2a6b66;font-size:13px;color:#a7d8d0}
+.me b{display:block;color:#fff;font-size:14px}
+main{padding:32px;max-width:1100px;width:100%}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.top h2{font-size:26px}
+.top p{color:var(--mut);font-size:14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px}
+.stat{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;border-left:5px solid var(--c)}
+.stat span{font-size:13px;color:var(--mut)}
+.stat b{display:block;font-size:30px;line-height:1.2}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:13px;color:var(--mut);font-weight:600;padding:10px 12px;border-bottom:1.5px solid var(--line);white-space:nowrap}
+td{padding:11px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.pill{display:inline-block;padding:3px 11px;border-radius:99px;font-size:12px;font-weight:700}
+.pill.hadir{background:var(--okbg);color:var(--ok)}
+.pill.tidak{background:var(--nobg);color:var(--no)}
+.pill.belum{background:var(--waitbg);color:var(--wait)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.row input,.row select{width:auto}
+.empty{text-align:center;color:var(--mut);padding:28px 10px;font-size:14px}
+h3{font-size:16px;margin-bottom:12px}
+.msg{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;background:#fff;display:flex;justify-content:space-between;gap:14px}
+.msg.new{border-left:5px solid var(--no);background:#fffafa}
+.msg p{margin:4px 0;font-size:14px}
+.msg small{color:var(--mut)}
+.grid2{display:grid;grid-template-columns:1fr 1.4fr;gap:18px;align-items:start}
+/* siswa */
+.sh{background:var(--pri);color:#e6fffa;padding:18px 28px;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sm-wrap{max-width:760px;margin:0 auto;padding:26px 18px 50px}
+.today{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:18px}
+.clock{font-size:42px;font-weight:800;letter-spacing:-.02em;line-height:1}
+.date{color:var(--mut);margin:6px 0 20px}
+.choice{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ch{padding:20px 12px;border-radius:14px;border:2px solid var(--line);background:#fff;font-weight:700;font-size:16px;display:grid;gap:4px;justify-items:center}
+.ch span{font-size:26px}
+.ch.h:hover,.ch.h.sel{border-color:var(--ok);background:var(--okbg);color:var(--ok)}
+.ch.t:hover,.ch.t.sel{border-color:var(--no);background:var(--nobg);color:var(--no)}
+.done{display:flex;gap:14px;align-items:center;padding:16px;border-radius:14px}
+.done.hadir{background:var(--okbg);color:#0b6b54}
+.done.tidak{background:var(--nobg);color:#962b2b}
+.done b{font-size:18px;display:block}
+.wa{display:inline-flex;gap:8px;align-items:center;background:#1fa855;color:#fff;padding:11px 18px;border-radius:10px;font-weight:700;text-decoration:none;font-size:14px}
+.wa:hover{background:#188a45}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 20px;border-radius:10px;font-size:14px;z-index:30}
+.modal{position:fixed;inset:0;background:#0f172a99;display:grid;place-items:center;padding:18px;z-index:20}
+.modal .card{width:100%;max-width:430px}
+@media(max-width:860px){
+#login{grid-template-columns:1fr}.hero{padding:28px;gap:24px}.hero h1{font-size:30px}.hero ul{display:none}
+.shell{grid-template-columns:1fr}aside{position:static;height:auto;flex-direction:row;flex-wrap:wrap;padding:12px}aside .logo,.me{display:none}.nav{width:auto;flex:1}
+main{padding:18px}.stats{grid-template-columns:1fr 1fr}.grid2{grid-template-columns:1fr}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section id="login" class="hide">
+  <div class="hero">
+    <div class="logo"><i>A</i> Absensi Siswa</div>
+    <div><h1>Kehadiran tercatat, rapi, dan real-time.</h1><p>Masuk untuk mengisi absen harian atau mengelola rekap kehadiran siswa.</p></div>
+    <ul><li>Waktu absen tercatat otomatis</li><li>Alasan tidak hadir langsung diterima admin</li><li>Riwayat kehadiran tersimpan lengkap</li></ul>
+  </div>
+  <div class="lf">
+    <form id="lform">
+      <h2>Masuk</h2><p class="sub">Gunakan akun yang didaftarkan oleh admin.</p>
+      <label for="ln">Nama</label><input id="ln" autocomplete="name" required placeholder="Nama lengkap">
+      <label for="le">Gmail</label><input id="le" type="email" autocomplete="username" required placeholder="nama@gmail.com">
+      <label for="lp">Password</label><input id="lp" type="password" autocomplete="current-password" required placeholder="Password">
+      <div class="err" id="lerr" role="alert"></div>
+      <button class="btn full" id="lbtn">Masuk</button>
+    </form>
+  </div>
+</section>
+
+<!-- ADMIN -->
+<section id="admin" class="shell hide">
+  <aside>
+    <div class="logo"><i>A</i> Absensi Siswa</div>
+    <button class="nav on" data-v="dash">Dashboard</button>
+    <button class="nav" data-v="pesan">Pesan <span class="badge hide" id="badge">0</span></button>
+    <button class="nav" data-v="siswa">Tambah Siswa</button>
+    <div class="me"><b id="aname">Samuel</b>Admin<br><button class="btn ghost sm" style="margin-top:10px" onclick="logout()">Keluar</button></div>
+  </aside>
+  <main>
+    <!-- dashboard -->
+    <div id="v-dash">
+      <div class="top"><div><h2>Dashboard</h2><p>Rekap kehadiran siswa, diperbarui secara real-time.</p></div>
+        <div class="row"><input type="date" id="adate" aria-label="Tanggal rekap"><button class="btn" onclick="openCustom()">Ubah Kehadiran</button><button class="btn ghost" onclick="exportCSV()">Unduh CSV</button></div></div>
+      <div class="stats" id="stats"></div>
+      <div class="card" style="margin-bottom:18px"><h3>Rekap tanggal terpilih</h3><div class="tw"><table><thead><tr><th>Nama</th><th>Status</th><th>Waktu absen</th><th>Keterangan</th></tr></thead><tbody id="rekap"></tbody></table></div></div>
+      <div class="card"><h3>Riwayat semua absensi</h3><div class="tw"><table><thead><tr><th>Tanggal</th><th>Nama</th><th>Status</th><th>Dicatat pada</th><th>Keterangan</th><th>Oleh</th></tr></thead><tbody id="riwayat"></tbody></table></div></div>
+    </div>
+    <!-- pesan -->
+    <div id="v-pesan" class="hide"><div class="top"><div><h2>Pesan</h2><p>Keterangan tidak hadir yang dikirim siswa.</p></div><button class="btn ghost" onclick="readAll()">Tandai semua dibaca</button></div><div id="msgs"></div></div>
+    <!-- siswa -->
+    <div id="v-siswa" class="hide"><div class="top"><div><h2>Tambah Siswa</h2><p>Akun yang didaftarkan di sini yang bisa masuk ke aplikasi.</p></div></div>
+      <div class="grid2">
+        <form class="card" id="sform"><h3>Siswa baru</h3>
+          <label for="sn">Nama</label><input id="sn" required>
+          <label for="se">Gmail</label><input id="se" type="email" required>
+          <label for="sp">Password (min. 6 karakter)</label><input id="sp" minlength="6" required>
+          <div class="err" id="serr" role="alert"></div>
+          <button class="btn full" id="sbtn">Daftarkan siswa</button></form>
+        <div class="card"><h3>Daftar siswa (<span id="scount">0</span>)</h3><div class="tw"><table><thead><tr><th>Nama</th><th>Gmail</th><th></th></tr></thead><tbody id="slist"></tbody></table></div></div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!-- SISWA -->
+<section id="siswa" class="hide">
+  <div class="sh"><div><b id="sname"></b><div style="font-size:13px;color:#a7d8d0" id="smail"></div></div><button class="btn ghost sm" onclick="logout()">Keluar</button></div>
+  <div class="sm-wrap">
+    <div class="today">
+      <div class="clock" id="clock"></div><div class="date" id="today"></div>
+      <div id="absenbox"></div>
+    </div>
+    <div class="stats" id="mystats" style="grid-template-columns:repeat(3,1fr)"></div>
+    <div class="card"><h3>Riwayat kehadiran saya</h3><div class="tw"><table><thead><tr><th>Tanggal</th><th>Status</th><th>Waktu</th><th>Keterangan</th></tr></thead><tbody id="myhist"></tbody></table></div></div>
+  </div>
+</section>
+
+<div id="modal" class="modal hide"></div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+<script>
+/* ====== 1. ISI KONFIGURASI FIREBASE ANDA DI SINI ====== */
+const firebaseConfig = {
+  apiKey:"AIzaSyAmYCuRVwRB3pAxDHjw-h_XHe8kxVjaHZw",
+  authDomain: "absensi-16269.firebaseapp.com",
+  databaseURL: "https://absensi-16269-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:  "absensi-16269",
+  storageBucket:  "absensi-16269.firebasestorage.app",
+  messagingSenderId:"295389073277",
+  appId: "1:295389073277:web:2cff2af30299adb4ce0614",
+};
+/* ====== 2. PENGATURAN ADMIN ====== */
+const ADMIN_EMAIL = "samuel@gmail.com", ADMIN_NAME = "Samuel", ADMIN_PASS = "samuel123";
+const WA_NUMBER = "6281214233454"; // 081214233454
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth(), db = firebase.database(), TS = firebase.database.ServerValue.TIMESTAMP;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2, '0');
+const dstr = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const todayStr = () => dstr(new Date());
+const fdate = s => new Date(s + 'T00:00').toLocaleDateString('id-ID', {weekday:'long', day:'numeric', month:'long', year:'numeric'});
+const ftime = t => t ? new Date(t).toLocaleString('id-ID', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit', second:'2-digit'}) : '-';
+const pill = s => s === 'hadir' ? '<span class="pill hadir">Hadir</span>' : s === 'tidak' ? '<span class="pill tidak">Tidak hadir</span>' : '<span class="pill belum">Belum absen</span>';
+const show = id => { ['login','admin','siswa'].forEach(x => $('#'+x).classList.toggle('hide', x !== id)); };
+function toast(t){ const e = document.createElement('div'); e.className='toast'; e.textContent=t; document.body.appendChild(e); setTimeout(()=>e.remove(),2600); }
+
+let users = {}, att = {}, msgs = {}, me = null, refs = [], loggingIn = false, clockT;
+function listen(ref, fn){ ref.on('value', s => fn(s.val() || {})); refs.push(ref); }
+function detach(){ refs.forEach(r => r.off()); refs = []; clearInterval(clockT); users = {}; att = {}; msgs = {}; }
+
+/* ---------- LOGIN ---------- */
+$('#lform').addEventListener('submit', async e => {
+  e.preventDefault();
+  const name = $('#ln').value.trim(), email = $('#le').value.trim().toLowerCase(), pass = $('#lp').value;
+  const err = $('#lerr'), btn = $('#lbtn'); err.textContent = ''; btn.disabled = true; loggingIn = true;
+  try {
+    let cred;
+    try { cred = await auth.signInWithEmailAndPassword(email, pass); }
+    catch (x) {
+      const first = email === ADMIN_EMAIL && pass === ADMIN_PASS && ['auth/user-not-found','auth/invalid-credential'].includes(x.code);
+      if (!first) throw x;
+      cred = await auth.createUserWithEmailAndPassword(email, pass); // pembuatan akun admin pertama kali
+    }
+    const u = cred.user, isAdmin = email === ADMIN_EMAIL;
+    let prof;
+    if (isAdmin) { prof = {name: ADMIN_NAME, email, role: 'admin'}; await db.ref('users/' + u.uid).set(prof); }
+    else { prof = (await db.ref('users/' + u.uid).get()).val(); }
+    if (!prof) throw {code: 'x/unregistered'};
+    if (prof.name.trim().toLowerCase() !== name.toLowerCase()) throw {code: 'x/name'};
+    loggingIn = false; start(u, prof);
+  } catch (x) {
+    loggingIn = false; await auth.signOut().catch(()=>{});
+    const m = {'x/unregistered':'Akun belum didaftarkan oleh admin.','x/name':'Nama tidak sesuai dengan akun ini.','auth/invalid-credential':'Gmail atau password salah.','auth/wrong-password':'Gmail atau password salah.','auth/user-not-found':'Gmail belum terdaftar.','auth/too-many-requests':'Terlalu banyak percobaan. Coba lagi nanti.','auth/network-request-failed':'Tidak ada koneksi internet.','auth/api-key-not-valid.-please-pass-a-valid-api-key.':'Konfigurasi Firebase belum diisi dengan benar.'};
+    err.textContent = m[x.code] || 'Gagal masuk: ' + (x.message || x.code);
+  } finally { btn.disabled = false; }
+});
+auth.onAuthStateChanged(async u => {
+  if (loggingIn) return;
+  if (!u) { detach(); show('login'); return; }
+  if (me) return;
+  const prof = u.email === ADMIN_EMAIL ? {name: ADMIN_NAME, email: u.email, role:'admin'} : (await db.ref('users/' + u.uid).get()).val();
+  if (!prof) { await auth.signOut(); show('login'); return; }
+  start(u, prof);
+});
+function logout(){ me = null; detach(); auth.signOut(); $('#lform').reset(); }
+
+function start(u, prof){
+  me = {uid: u.uid, ...prof}; detach();
+  if (prof.role === 'admin') {
+    show('admin'); $('#aname').textContent = prof.name; $('#adate').value = todayStr();
+    listen(db.ref('users'), v => { users = v; renderAdmin(); renderSiswa(); });
+    listen(db.ref('attendance'), v => { att = v; renderAdmin(); });
+    listen(db.ref('messages'), v => { msgs = v; renderMsgs(); });
+  } else {
+    show('siswa'); $('#sname').textContent = prof.name; $('#smail').textContent = prof.email;
+    $('#today').textContent = fdate(todayStr()); tick(); clockT = setInterval(tick, 1000);
+    listen(db.ref('attendance/' + u.uid), v => { att = {[u.uid]: v}; renderStudent(); });
+  }
+}
+function tick(){ const e = $('#clock'); if (e) e.textContent = new Date().toLocaleTimeString('id-ID'); }
+
+/* ---------- ADMIN ---------- */
+document.querySelectorAll('.nav').forEach(b => b.onclick = () => {
+  document.querySelectorAll('.nav').forEach(x => x.classList.toggle('on', x === b));
+  ['dash','pesan','siswa'].forEach(v => $('#v-'+v).classList.toggle('hide', v !== b.dataset.v));
+});
+$('#adate').onchange = () => renderAdmin();
+const students = () => Object.entries(users).filter(([,u]) => u.role !== 'admin').sort((a,b) => a[1].name.localeCompare(b[1].name));
+
+function renderAdmin(){
+  if (!me || me.role !== 'admin') return;
+  const d = $('#adate').value || todayStr(), list = students();
+  let h = 0, t = 0;
+  $('#rekap').innerHTML = list.map(([uid, u]) => {
+    const r = att[uid]?.[d]; if (r?.status === 'hadir') h++; if (r?.status === 'tidak') t++;
+    return `<tr><td><b>${esc(u.name)}</b></td><td>${pill(r?.status)}</td><td>${r ? ftime(r.ts) : '-'}</td><td>${esc(r?.reason || '-')}</td></tr>`;
+  }).join('') || '<tr><td colspan="4" class="empty">Belum ada siswa. Tambahkan lewat menu Tambah Siswa.</td></tr>';
+  const st = (l, v, c) => `<div class="stat" style="--c:${c}"><span>${l}</span><b>${v}</b></div>`;
+  $('#stats').innerHTML = st('Total siswa', list.length, '#134e4a') + st('Hadir', h, '#0f8b6d') + st('Tidak hadir', t, '#c93c3c') + st('Belum absen', list.length - h - t, '#b7791f');
+  const all = [];
+  Object.entries(att).forEach(([uid, days]) => Object.values(days).forEach(r => all.push(r)));
+  all.sort((a,b) => (b.ts||0) - (a.ts||0));
+  $('#riwayat').innerHTML = all.slice(0, 200).map(r => `<tr><td>${esc(r.date)}</td><td><b>${esc(r.name)}</b></td><td>${pill(r.status)}</td><td>${ftime(r.ts)}</td><td>${esc(r.reason || '-')}</td><td>${r.by === 'admin' ? 'Admin' : 'Siswa'}</td></tr>`).join('') || '<tr><td colspan="6" class="empty">Belum ada riwayat absensi.</td></tr>';
+}
+function renderSiswa(){
+  const l = students(); $('#scount').textContent = l.length;
+  $('#slist').innerHTML = l.map(([uid,u]) => `<tr><td><b>${esc(u.name)}</b></td><td>${esc(u.email)}</td><td><button class="btn red sm" onclick="delStudent('${uid}')">Hapus</button></td></tr>`).join('') || '<tr><td colspan="3" class="empty">Belum ada siswa terdaftar.</td></tr>';
+}
+$('#sform').addEventListener('submit', async e => {
+  e.preventDefault();
+  const name = $('#sn').value.trim(), email = $('#se').value.trim().toLowerCase(), pass = $('#sp').value;
+  const err = $('#serr'), btn = $('#sbtn'); err.textContent = ''; btn.disabled = true;
+  let sec;
+  try {
+    sec = firebase.apps.find(a => a.name === 'sec') || firebase.initializeApp(firebaseConfig, 'sec'); // agar admin tidak ikut logout
+    const c = await sec.auth().createUserWithEmailAndPassword(email, pass);
+    await db.ref('users/' + c.user.uid).set({name, email, role: 'siswa', createdAt: TS});
+    await sec.auth().signOut(); e.target.reset(); toast('Siswa berhasil didaftarkan');
+  } catch (x) {
+    err.textContent = {'auth/email-already-in-use':'Gmail ini sudah terdaftar.','auth/weak-password':'Password minimal 6 karakter.','auth/invalid-email':'Format gmail tidak valid.'}[x.code] || 'Gagal: ' + x.message;
+  } finally { btn.disabled = false; }
+});
+async function delStudent(uid){
+  if (!confirm('Hapus siswa ini? Siswa tidak akan bisa masuk lagi. Riwayat absensinya tetap tersimpan.')) return;
+  await db.ref('users/' + uid).remove(); toast('Siswa dihapus');
+}
+function openCustom(){
+  const opts = students().map(([uid,u]) => `<option value="${uid}">${esc(u.name)}</option>`).join('');
+  if (!opts) return toast('Tambahkan siswa terlebih dahulu');
+  const m = $('#modal'); m.classList.remove('hide');
+  m.innerHTML = `<form class="card" id="cform"><h3>Ubah kehadiran siswa</h3>
+    <label>Siswa</label><select id="cu">${opts}</select>
+    <label>Tanggal</label><input type="date" id="cd" value="${$('#adate').value || todayStr()}" required>
+    <label>Status</label><select id="cs"><option value="hadir">Hadir</option><option value="tidak">Tidak hadir</option></select>
+    <label>Keterangan (opsional)</label><textarea id="cr" placeholder="Contoh: sakit, izin acara keluarga"></textarea>
+    <div class="row" style="margin-top:18px;justify-content:flex-end"><button type="button" class="btn ghost" onclick="closeModal()">Batal</button><button class="btn">Simpan</button></div></form>`;
+  $('#cform').onsubmit = async e => {
+    e.preventDefault(); const uid = $('#cu').value, date = $('#cd').value, status = $('#cs').value;
+    await db.ref(`attendance/${uid}/${date}`).set({uid, name: users[uid].name, date, status, reason: $('#cr').value.trim(), ts: TS, by: 'admin'});
+    closeModal(); toast('Kehadiran disimpan');
+  };
+}
+function closeModal(){ $('#modal').classList.add('hide'); $('#modal').innerHTML = ''; }
+function exportCSV(){
+  const rows = [['Tanggal','Nama','Status','Waktu dicatat','Keterangan','Oleh']];
+  Object.values(att).forEach(days => Object.values(days).forEach(r => rows.push([r.date, r.name, r.status === 'hadir' ? 'Hadir' : 'Tidak hadir', r.ts ? new Date(r.ts).toLocaleString('id-ID') : '', r.reason || '', r.by === 'admin' ? 'Admin' : 'Siswa'])));
+  const csv = rows.map(r => r.map(c => '"' + String(c).replace(/"/g,'""') + '"').join(',')).join('\n');
+  const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], {type:'text/csv'})); a.download = 'rekap-absensi.csv'; a.click();
+}
+
+/* ---------- PESAN ---------- */
+function renderMsgs(){
+  const l = Object.entries(msgs).sort((a,b) => (b[1].ts||0) - (a[1].ts||0));
+  const unread = l.filter(([,m]) => !m.read).length, b = $('#badge');
+  b.textContent = unread; b.classList.toggle('hide', !unread);
+  $('#msgs').innerHTML = l.map(([id,m]) => `<div class="msg ${m.read ? '' : 'new'}"><div><b>${esc(m.name)}</b> <small>· tidak hadir ${esc(m.date)}</small><p>${esc(m.reason)}</p><small>Dikirim ${ftime(m.ts)}</small></div>
+    <div class="row" style="flex-direction:column;align-items:flex-end">${m.read ? '' : `<button class="btn ghost sm" onclick="db.ref('messages/${id}/read').set(true)">Tandai dibaca</button>`}<button class="btn red sm" onclick="db.ref('messages/${id}').remove()">Hapus</button></div></div>`).join('') || '<div class="card empty">Belum ada pesan dari siswa.</div>';
+}
+function readAll(){ Object.entries(msgs).forEach(([id,m]) => { if (!m.read) db.ref(`messages/${id}/read`).set(true); }); }
+
+/* ---------- SISWA ---------- */
+let pick = null;
+function renderStudent(){
+  if (!me || me.role === 'admin') return;
+  const days = att[me.uid] || {}, r = days[todayStr()], box = $('#absenbox');
+  if (r) {
+    box.innerHTML = `<div class="done ${r.status}"><div style="font-size:34px">${r.status === 'hadir' ? '✔' : '✉'}</div><div><b>${r.status === 'hadir' ? 'Kamu sudah absen hadir' : 'Keterangan tidak hadir terkirim'}</b>Tercatat ${ftime(r.ts)}${r.reason ? '<br>Alasan: ' + esc(r.reason) : ''}</div></div>${waBtn()}`;
+  } else if (!box.querySelector('.choice')) {
+    box.innerHTML = `<div class="choice"><button class="ch h" id="bh"><span>✔</span>Hadir</button><button class="ch t" id="bt"><span>✉</span>Tidak hadir</button></div>
+      <div id="reasonbox" class="hide"><label for="reason">Alasan tidak hadir</label><textarea id="reason" placeholder="Contoh: sakit demam, izin acara keluarga"></textarea><div class="row" style="margin-top:12px"><button class="btn red" id="send">Kirim keterangan</button>${waBtn()}</div></div>`;
+    $('#bh').onclick = async () => { $('#bh').disabled = true; await save('hadir', ''); };
+    $('#bt').onclick = () => { $('#reasonbox').classList.remove('hide'); $('#bt').classList.add('sel'); $('#reason').focus(); };
+    $('#send').onclick = async () => { const v = $('#reason').value.trim(); if (!v) return toast('Isi alasan terlebih dahulu'); $('#send').disabled = true; await save('tidak', v); };
+  }
+  const L = Object.values(days).sort((a,b) => b.date.localeCompare(a.date)), c = s => L.filter(x => x.status === s).length;
+  const st = (l,v,col) => `<div class="stat" style="--c:${col}"><span>${l}</span><b>${v}</b></div>`;
+  $('#mystats').innerHTML = st('Hadir', c('hadir'), '#0f8b6d') + st('Tidak hadir', c('tidak'), '#c93c3c') + st('Total absen', L.length, '#134e4a');
+  $('#myhist').innerHTML = L.map(x => `<tr><td>${esc(fdate(x.date))}</td><td>${pill(x.status)}</td><td>${ftime(x.ts)}</td><td>${esc(x.reason || '-')}</td></tr>`).join('') || '<tr><td colspan="4" class="empty">Belum ada riwayat. Absen pertamamu akan muncul di sini.</td></tr>';
+}
+const waBtn = () => `<a class="wa" style="margin-top:14px" target="_blank" rel="noopener" href="https://wa.me/${WA_NUMBER}?text=${encodeURIComponent('Halo Samuel, saya ' + me.name + '. ')}">WA Samuel</a>`;
+async function save(status, reason){
+  const date = todayStr();
+  try {
+    await db.ref(`attendance/${me.uid}/${date}`).set({uid: me.uid, name: me.name, date, status, reason, ts: TS, by: 'siswa'});
+    if (status === 'tidak') await db.ref('messages').push({uid: me.uid, name: me.name, date, reason, ts: TS, read: false});
+    toast(status === 'hadir' ? 'Absen hadir tercatat' : 'Keterangan terkirim ke Samuel');
+  } catch (e) { toast('Gagal menyimpan. Periksa koneksi atau rules database.'); renderStudent(); }
+}
+</script>
+</body>
+</html>
